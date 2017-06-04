@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery UI -->
+    <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
+
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- styles -->
+    <link href="css/styles.css" rel="stylesheet">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+  </head>
+  <body>
+  	<div class="header">
+	     <div class="container">
+	        <div class="row">
+	           <div class="col-md-5">
+	              <!-- Logo -->
+	              <div class="logo">
+	                 <h1><a href="index.html">Library Management System</a></h1>
+	              </div>
+	           </div>
+	        </div>
+	     </div>
+	</div>
+
+    <div class="page-content">
+      <div class="row">
+      <div class="col-lg-12">
+		  	<div style="padding-left:12px">
+			<a href="index.html" class="btn btn-default">Search for a Book</a>
+			<a href="borrowers.html" class="btn btn-default">Add a Borrower</a>
+			<a href="fines.html" class="btn btn-default">Check Dues</a>
+			<a href="payfines.html" class="btn btn-default">Pay Fines</a>
+			<a href="checkin.html" class="btn btn-default">Check In</a>
+			<a href="checkout.html" class="btn btn-default">Check Out</a>
+				
+				
+			</div>
+      </div>
+      <div>
+
+        <div class="row" >
+            <div class="col-md-6">
+              <div class="content-box-large">
+                
+                <div class="panel-body" id="getfinesclass">
+                  <form id="getfines" method="get" class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label for="cardno" class="col-sm-2 control-label">Card No</label>
+                    <div class="col-sm-10">
+                      <input type="cardno" class="form-control" id="cardno" placeholder="Card No">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button id = "getfinebutton" type="submit" class="btn btn-primary button" >Get Fines</button>
+                    </div>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+
+
+
+             <div class="form-group" id="updatefinebutton">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary button" >Update Fines</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+              <div id="fineresult">
+                  
+              </div>
+
+          </div>
+
+      </div>
+    </div>
+    </div>
+
+     <script>
+        $(document).ready(function () {
+            $('#getfinesclass').delegate('.button','click',function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:3000/fines/' + $("#cardno").val(),
+                    cache: false,
+                    success: function(data) {
+                        var $label = $("<label>").text('Total Fine for Id '+$("#cardno").val() +' is :');
+                        $('#fineresult').empty();
+                        $('#fineresult').append($label);
+                        $('#fineresult').append('<div class="form-group">'+ data.totalFine +'</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#updatefinebutton').on('click',function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:3000/fines',
+                    dataType: 'json',
+                    success: function(data) {
+                        var $label = $("<label>").text('Successfully updated fines.');
+                        $('#fineresult').empty();
+                        $('#fineresult').append($label);
+                    },
+                    error: function(data) {
+                        var $label = $("<label>").text(JSON.parse(data.responseText).message);
+                        $('#fineresult').empty();
+                        $('#fineresult').append($label);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+  </body>
+</html>
